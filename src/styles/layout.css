@@ -1,0 +1,109 @@
+.navbar {
+  background: var(--ink);
+  border-bottom: var(--border-w) solid var(--ink);
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+.navbar-inner {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 68px;
+}
+.brand {
+  font-family: var(--font-display);
+  font-size: 1.7rem;
+  letter-spacing: 0.05em;
+  color: var(--paper);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.brand:hover { color: var(--gold); }
+.brand-mark {
+  color: var(--cover-red);
+}
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+.nav-links a, .nav-links button {
+  color: var(--paper);
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+  padding: 6px 0;
+}
+.nav-links a:hover, .nav-links button:hover {
+  color: var(--gold);
+}
+.nav-links a.active {
+  color: var(--cover-red);
+  border-bottom: 2px solid var(--cover-red);
+}
+.nav-user {
+  color: var(--gold);
+}
+.nav-toggle {
+  display: none;
+}
+
+.site-footer {
+  border-top: var(--border-w) solid var(--ink);
+  background: var(--ink);
+  color: var(--paper);
+  margin-top: 64px;
+  padding: 32px 0;
+}
+.footer-inner {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.footer-inner .eyebrow { color: var(--muted); }
+
+@media (max-width: 720px) {
+  .nav-links {
+    position: fixed;
+    top: 68px;
+    left: 0;
+    right: 0;
+    background: var(--ink);
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 18px 24px 26px;
+    border-bottom: var(--border-w) solid var(--ink);
+    display: none;
+  }
+  .nav-links.open {
+    display: flex;
+  }
+  .nav-toggle {
+    display: block;
+    background: none;
+    border: 2px solid var(--paper);
+    color: var(--paper);
+    border-radius: var(--radius);
+    padding: 6px 10px;
+    font-family: var(--font-mono);
+    cursor: pointer;
+  }
+}
