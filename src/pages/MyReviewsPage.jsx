@@ -9,13 +9,29 @@ import Loader from "../components/common/Loader";
 export default function MyReviewsPage() {
   const [reviews, setReviews] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
   const [editingId, setEditingId] = useState(null);
 
   const load = useCallback(async () => {
     setLoading(true);
-    const res = await client.get("/reviews/mine");
-    setReviews(res.data);
-    setLoading(false);
+    setError("");
+    try {
+      const res = await client.get("/reviews/mine");
+      setReviews(res.data);
+    } catch (err) {
+      console.error("Failed to load reviews:", err);
+      if (!err.response) {
+        setError("Could not reach the backend API. Is the Flask server running?");
+      } else {
+        setError(
+          `Server error (${err.response.status}): ${err.response.data?.error || "Something went wrong."}`
+        );
+      }
+    } finally {
+      // This ALWAYS runs now, even on failure, so the page never gets stuck
+      // on "Loading your reviews..." again.
+      setLoading(false);
+    }
   }, []);
 
   useEffect(() => {
@@ -43,6 +59,8 @@ export default function MyReviewsPage() {
 
       {loading ? (
         <Loader label="Loading your reviews" />
+      ) : error ? (
+        <div className="form-error">{error}</div>
       ) : reviews.length === 0 ? (
         <div className="empty-state">
           <h3>You haven't written any reviews yet</h3>
