@@ -21,6 +21,7 @@ export default function AnimeDetailPage() {
   const [showForm, setShowForm] = useState(false);
   const [editingReview, setEditingReview] = useState(null);
   const [watchlistMsg, setWatchlistMsg] = useState("");
+  const [actionError, setActionError] = useState("");
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -63,8 +64,17 @@ export default function AnimeDetailPage() {
 
   const handleDeleteAnime = async () => {
     if (!window.confirm(`Delete "${anime.title}" permanently?`)) return;
-    await deleteAnime(id);
-    navigate("/");
+    setActionError("");
+    try {
+      await deleteAnime(id);
+      navigate("/");
+    } catch (err) {
+      if (err.response?.status === 401) {
+        setActionError("Your session has expired. Please log out and log back in, then try again.");
+      } else {
+        setActionError(err.response?.data?.error || "Could not delete this anime.");
+      }
+    }
   };
 
   const handleAddToWatchlist = async () => {
@@ -72,7 +82,11 @@ export default function AnimeDetailPage() {
       await addToWatchlist(id);
       setWatchlistMsg("Added to your watchlist.");
     } catch (err) {
-      setWatchlistMsg(err.response?.data?.error || "Could not add to watchlist.");
+      if (err.response?.status === 401) {
+        setWatchlistMsg("Your session has expired. Please log out and log back in.");
+      } else {
+        setWatchlistMsg(err.response?.data?.error || "Could not add to watchlist.");
+      }
     }
   };
 
@@ -123,6 +137,7 @@ export default function AnimeDetailPage() {
             )}
           </div>
           {watchlistMsg && <p className="form-hint">{watchlistMsg}</p>}
+          {actionError && <div className="form-error" style={{ marginTop: 12 }}>{actionError}</div>}
           {!isAuthenticated && (
             <p className="form-hint">
               <Link to="/login">Log in</Link> to write a review or save this to your watchlist.
